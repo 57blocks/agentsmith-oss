@@ -1,0 +1,58 @@
+services:
+  stellar-facilitator:
+    build:
+      context: ../..
+      dockerfile: packages/facilitator/Dockerfile
+    env_file: .env
+    environment:
+      # Bind inside the container, while the published host port remains loopback-only.
+      HOST: 0.0.0.0
+      # The store as the container sees it; `.env` keeps the host's address for `pnpm dev`.
+      CHANNEL_STORE_URL: redis://valkey:6379/0
+      # The image sets production, which refuses environment keys; this container is local
+      # development and signs with them.
+      NODE_ENV: development
+    ports:
+      - '127.0.0.1:8407:8407'
+    depends_on:
+      valkey:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # Shared channel-pool store: channel membership and leases for local development.
+  valkey:
+    image: valkey/valkey:9.2-alpine
+    # Append-only persistence: a lost member set would fall back to the configured seed list.
+    command: ['valkey-server', '--appendonly', 'yes']
+    ports:
+      - '127.0.0.1:6379:6379'
+    volumes:
+      - valkey-data:/data
+    healthcheck:
+      test: ['CMD', 'valkey-cli', 'ping']
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+
+  # Local development database. Set DATABASE_URL in .env for the facilitator to record settlements.
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: facilitator
+      POSTGRES_PASSWORD: facilitator
+      POSTGRES_DB: facilitator
+    ports:
+      - '127.0.0.1:5432:5432'
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD', 'pg_isready', '-U', 'facilitator', '-d', 'facilitator']
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  valkey-data:
+  postgres-data:

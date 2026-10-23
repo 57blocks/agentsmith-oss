@@ -1,0 +1,79 @@
+{
+  "name": "agentsmith-x402-sdk",
+  "version": "0.1.4",
+  "description": "Stellar x402 integration helpers for Sellers and Buyers.",
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "exports": {
+    "./seller": {
+      "import": "./dist/seller.js",
+      "types": "./dist/seller.d.ts"
+    },
+    "./buyer": {
+      "import": "./dist/buyer.js",
+      "types": "./dist/buyer.d.ts"
+    },
+    "./seller/express": {
+      "import": "./dist/seller/express.js",
+      "types": "./dist/seller/express.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "node ../../.github/scripts/sdk-build.mjs",
+    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p tests/tsconfig.json",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "pnpm run test:unit",
+    "check": "pnpm run format:check && pnpm run lint && pnpm run typecheck && pnpm run test",
+    "test:unit": "vitest run --exclude '**/*.integration.test.ts'",
+    "test:integration": "pnpm run build && vitest run tests/integration",
+    "test:package": "node ../../.github/scripts/sdk-package-integration.mjs",
+    "testnet:create-accounts": "node scripts/create-testnet-accounts.mjs"
+  },
+  "dependencies": {
+    "@stellar/stellar-sdk": "16.2.0",
+    "@x402/core": "2.23.0",
+    "@x402/fetch": "2.23.0",
+    "@x402/stellar": "2.23.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.5",
+    "@nestjs/common": "12.1.2",
+    "@nestjs/core": "12.1.2",
+    "@nestjs/platform-express": "12.1.2",
+    "@types/express": "5.0.6",
+    "@types/node": "^24.3.0",
+    "@types/supertest": "6.0.3",
+    "@x402/express": "2.23.0",
+    "eslint": "^9.39.5",
+    "eslint-config-prettier": "^10.1.8",
+    "express": "5.2.1",
+    "globals": "^16.5.0",
+    "prettier": "^3.9.9",
+    "reflect-metadata": "0.2.2",
+    "rxjs": "7.8.2",
+    "supertest": "7.2.2",
+    "typescript": "^5.9.2",
+    "typescript-eslint": "^8.71.1",
+    "vitest": "^3.2.4"
+  },
+  "peerDependencies": {
+    "@x402/express": "2.23.0",
+    "express": "^4.0.0 || ^5.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@x402/express": {
+      "optional": true
+    },
+    "express": {
+      "optional": true
+    }
+  },
+  "files": [
+    "dist"
+  ]
+}

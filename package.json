@@ -1,0 +1,21 @@
+{
+  "name": "agentsmith",
+  "private": true,
+  "packageManager": "pnpm@10.6.5",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "dev": "pnpm --filter @agentsmith/stellar-facilitator dev",
+    "start": "pnpm --filter @agentsmith/stellar-facilitator start",
+    "db:migrate": "pnpm --filter @agentsmith/stellar-facilitator db:migrate",
+    "build": "pnpm -r run build",
+    "check": "pnpm -r run check",
+    "test": "pnpm -r run test",
+    "typecheck": "pnpm -r run typecheck",
+    "lint": "pnpm -r run lint",
+    "lint:fix": "pnpm -r run lint:fix",
+    "format": "pnpm -r run format",
+    "format:check": "pnpm -r run format:check"
+  }
+}

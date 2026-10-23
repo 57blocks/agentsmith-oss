@@ -1,0 +1,14 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "..",
+    "noEmit": true,
+    "experimentalDecorators": true,
+    "paths": {
+      "agentsmith-x402-sdk/seller": ["../src/seller.ts"],
+      "agentsmith-x402-sdk/seller/express": ["../src/seller/express.ts"],
+      "agentsmith-x402-sdk/buyer": ["../src/buyer.ts"]
+    }
+  },
+  "include": ["**/*.ts"]
+}
